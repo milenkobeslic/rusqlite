@@ -1,5 +1,5 @@
 use alloc::boxed::Box;
-use core::ffi::{c_int, c_void};
+use core::ffi::{c_char, c_int, c_void};
 
 use sqlcipher_crypto_provider::{
     HmacAlgorithm, KdfAlgorithm, RustCryptoProvider, SqlcipherCryptoProvider,
@@ -114,9 +114,9 @@ extern "C" fn get_key_sz(ctx: *mut c_void) -> i32 {
     obj.get_key_sz()
 }
 
-extern "C" fn get_provider_name(ctx: *mut c_void) -> *const i8 {
+extern "C" fn get_provider_name(ctx: *mut c_void) -> *const c_char {
     let obj = ctx_to_trait_mut(ctx);
-    obj.get_provider_name().as_ptr()
+    obj.get_provider_name().as_ptr() as *const c_char
 }
 
 // int (*kdf)(void *ctx, int algorithm,
@@ -209,9 +209,9 @@ extern "C" fn cipher(
 //             const unsigned char *in, int in_sz,
 //             unsigned char *out);
 
-extern "C" fn get_cipher(ctx: *mut c_void) -> *const i8 {
+extern "C" fn get_cipher(ctx: *mut c_void) -> *const c_char {
     let obj = ctx_to_trait_mut(ctx);
-    obj.get_cipher().as_ptr()
+    obj.get_cipher().as_ptr() as *const c_char
 }
 
 extern "C" fn get_iv_sz(ctx: *mut c_void) -> i32 {
@@ -229,9 +229,9 @@ extern "C" fn get_hmac_sz(ctx: *mut c_void, algorithm: c_int) -> i32 {
     obj.get_hmac_sz(parse_hmac_algorithm(algorithm))
 }
 
-extern "C" fn get_provider_version(ctx: *mut c_void) -> *const i8 {
+extern "C" fn get_provider_version(ctx: *mut c_void) -> *const c_char {
     let obj = ctx_to_trait_mut(ctx);
-    obj.get_provider_version().as_ptr()
+    obj.get_provider_version().as_ptr() as *const c_char
 }
 
 extern "C" fn fips_status(ctx: *mut c_void) -> i32 {
